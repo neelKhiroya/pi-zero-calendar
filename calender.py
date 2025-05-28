@@ -45,16 +45,13 @@ def auth_google():
     return creds
 
 def get_system_info():
-    # CPU usage
     cpu_percent = psutil.cpu_percent(interval=1)
 
-    # RAM usage
     mem = psutil.virtual_memory()
     mem_used = mem.used // (1024 * 1024)
     mem_total = mem.total // (1024 * 1024)
     mem_percent = mem.percent
 
-    # Temperature (Raspberry Pi specific)
     try:
         with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
             temp_c = int(f.read().strip()) / 1000
@@ -150,7 +147,7 @@ def render_page(title, events, page_num, total_pages, countdown, tasks=[]):
 
     body_lines = []
     today = datetime.datetime.now().date()
-    week_end = today + datetime.timedelta(days=6 - today.weekday())  # Sunday
+    week_end = today + datetime.timedelta(days=6 - today.weekday())  # end of week (sunday)
 
     for start, summary in events[:5]:
         start_date = start.date()
@@ -159,7 +156,7 @@ def render_page(title, events, page_num, total_pages, countdown, tasks=[]):
         elif today < start_date <= week_end:
             time_str = start.strftime('%a')         # this week
         else:
-            time_str = start.strftime('%b %-d')      # beyond this week (e.g. Jun 10)
+            time_str = start.strftime('%b %-d')      # not this week, show date
 
         line = Text(f"{time_str} {summary}")
         line.truncate(console.width - 4, overflow="ellipsis")
@@ -169,7 +166,7 @@ def render_page(title, events, page_num, total_pages, countdown, tasks=[]):
     if tasks:
         body_lines.append(Text(""))
         body_lines.append(Text("Tasks:", style="bold magenta"))
-        for _, summary in tasks[:3]:  # limit tasks to 3
+        for _, summary in tasks[:5]:  # limit og 5
             line = Text(f"• {summary}")
             line.truncate(console.width - 4, overflow="ellipsis")
             line.no_wrap = True
