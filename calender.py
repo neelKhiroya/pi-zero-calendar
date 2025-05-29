@@ -173,9 +173,9 @@ def render_page(title, events, page_num, total_pages, countdown, tasks=[]):
             body_lines.append(line)
 
     if len(events) > 5:
-        body_lines.append(Text(f"[dim]+{len(events) - 5} more...[/dim]", style="dim"))
+        body_lines.append(Text(f"+{len(events) - 5} more...", style="dim"))
     if len(tasks) > 3:
-        body_lines.append(Text(f"[dim]+{len(tasks) - 3} more tasks...[/dim]", style="dim"))
+        body_lines.append(Text(f"+{len(tasks) - 3} more tasks...", style="dim"))
 
     footer_text = Text(f"Page {page_num}/{total_pages} | Next in {countdown:02}s", style="dim", justify="center")
 
